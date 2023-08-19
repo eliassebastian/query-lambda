@@ -1,0 +1,28 @@
+name: release
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+" # regex for semver tags
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: build zip file
+        run: |
+          pwd
+          cd src
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+          zip -r ../query_lambda.zip .
+          cd ..
+          done
+      - name: create release
+        uses: ncipollo/release-action@v1
+        with:
+          release_name: Release ${{ github.ref }}
+          artifacts: query_lambda.zip
