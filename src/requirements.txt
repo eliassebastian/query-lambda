@@ -1,0 +1,4 @@
+streaming_form_data==1.12.0
+tafra==1.0.10
+xxhash==3.2.0
+libsql-client==0.3.0
