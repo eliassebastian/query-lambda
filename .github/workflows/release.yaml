@@ -19,7 +19,7 @@ jobs:
           pwd
           cd src
           python3 -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install --target . -r requirements.txt
           zip -r ../query_lambda.zip .
           cd ..
       - name: Create Release
