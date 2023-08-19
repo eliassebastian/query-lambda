@@ -1,4 +1,4 @@
-name: release
+name: Release
 on:
   push:
     tags:
@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
-      - name: build zip file
+      - name: Build Zip File
         run: |
           pwd
           cd src
@@ -21,7 +21,7 @@ jobs:
           zip -r ../query_lambda.zip .
           cd ..
           done
-      - name: create release
+      - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           release_name: Release ${{ github.ref }}
