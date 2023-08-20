@@ -5,13 +5,18 @@ Description: >
 
   Template for query-lambda
 
+Parameters:
+  StageName:
+    Type: String
+    Default: Prod
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
 
 Resources:
-  upload:
+  LambdaFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: src/
@@ -24,8 +29,27 @@ Resources:
         ApiEvent:
           Type: HttpApi # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
+            ApiId:
+              Ref: HttpApi
             Path: /upload
             Method: post
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref StageName
+      DefinitionBody:
+        swagger: "2.0"
+        basePath: "/prod"
+        paths:
+          /upload:
+            post:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: "1.0"
+                type: "aws_proxy"
+                httpMethod: "POST"
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+                connectionType: "INTERNET"
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
@@ -40,13 +64,18 @@ Resources:
       ResourceGroupName:
         Ref: ApplicationResourceGroup
       AutoConfigurationEnabled: "true"
+
 Outputs:
+  HttpApiUrl:
+    Description: URL of your API endpoint
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/"
+  HttpApiId:
+    Description: Api id of HttpApi
+    Value: !Ref HttpApi
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  QueryUploadApi:
-    Description: API Gateway endpoint URL for Prod stage for Query Upload function
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
+
   # HelloWorldFunction:
   #   Description: Hello World Lambda Function ARN
   #   Value: !GetAtt HelloWorldFunction.Arn
