@@ -39,11 +39,15 @@ Resources:
     Properties:
       StageName: !Ref StageName
       DefinitionBody:
+        openapi: 3.0.1
         swagger: "2.0"
         basePath: "/prod"
         paths:
           /upload:
             post:
+              responses:
+                default:
+                  description: "Default response for POST /query_upload"
               x-amazon-apigateway-integration:
                 payloadFormatVersion: "1.0"
                 type: "aws_proxy"
