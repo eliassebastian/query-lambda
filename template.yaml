@@ -6,13 +6,13 @@ Description: >
   Template for query-lambda
 
 Parameters:
-  STAGE_NAME:
+  StageName:
     Type: String
     Default: Prod
-  TURSO_DB_URL:
+  TursoDbUrl:
     Description: "Required. Turso DB URL"
     Type: "String"
-  TURSO_DB_AUTH_TOKEN:
+  TursoDbAuthToken:
     Description: "Required. Turso DB Authentication Token"
     Type: "String"
 
@@ -41,13 +41,13 @@ Resources:
             Method: post
       Environment:
         Variables:
-          TURSO_DB_URL: !Ref TURSO_DB_URL
-          TURSO_DB_AUTH_TOKEN: !Ref TURSO_DB_AUTH_TOKEN
+          TURSO_DB_URL: !Ref TursoDbUrl
+          TURSO_DB_AUTH_TOKEN: !Ref TursoDbAuthToken
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: !Ref STAGE_NAME
+      StageName: !Ref StageName
       DefinitionBody:
         openapi: 3.0.1
         swagger: "2.0"
