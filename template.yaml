@@ -35,8 +35,8 @@ Resources:
             Method: post
       Environment:
         Variables:
-          TURSO_DB_URL:
-          TURSO_DB_AUTH_TOKEN:
+          TURSO_DB_URL: ""
+          TURSO_DB_AUTH_TOKEN: ""
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
