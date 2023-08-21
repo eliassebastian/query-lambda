@@ -1,7 +1,9 @@
+import io
 import json
-
-# import requests
-
+from streaming_form_data import StreamingFormDataParser
+from streaming_form_data.targets import ValueTarget
+import base64
+import tafra
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
@@ -33,12 +35,31 @@ def lambda_handler(event, context):
 
     #     raise e
 
-    print("event", event,"context", context)
+    print("event", event,"context", context, event['isBase64Encoded'], 'test')
+
+    parser = StreamingFormDataParser(headers=event['headers'])
+    test = ValueTarget() 
+    uploaded_file = ValueTarget()
+
+    parser.register("test", test)
+    parser.register("file", uploaded_file)
+
+    if event['isBase64Encoded']:
+        body_bytes = base64.b64decode(event['body'])
+    else:
+        body_bytes = event['body'].encode('utf-8')
+
+    parser.data_received(body_bytes)
+
+    buffer = io.BufferedReader(io.BytesIO(uploaded_file.value))
+    wrapper = io.TextIOWrapper(buffer, encoding='utf-8')
+    tf = tafra.read_csv(wrapper, guess_rows=10)
+
+    print(tf)
 
     return {
         "statusCode": 200,
         "body": json.dumps({
             "message": "hello world",
-            # "location": ip.text.replace("\n", "")
         }),
     }
