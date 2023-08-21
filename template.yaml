@@ -12,9 +12,11 @@ Parameters:
   TursoDbUrl:
     Description: "Required. Turso DB URL"
     Type: "String"
+    Default: "None"
   TursoDbAuthToken:
     Description: "Required. Turso DB Authentication Token"
     Type: "String"
+    Default: "None"
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
