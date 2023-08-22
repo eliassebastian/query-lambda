@@ -237,7 +237,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# aws sam build folder
 .aws-sam
+
+# local aws env file
+env.json
 
 # Build folder
 
