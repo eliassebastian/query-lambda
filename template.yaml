@@ -6,17 +6,13 @@ Description: >
   Template for query-lambda
 
 Parameters:
-  StageName:
+  stageName:
     Type: String
     Default: Prod
-  TursoDbUrl:
-    Description: "Required. Turso DB URL"
+  secretName:
+    Description: "turso secret name"
     Type: "String"
-    Default: "None"
-  TursoDbAuthToken:
-    Description: "Required. Turso DB Authentication Token"
-    Type: "String"
-    Default: "None"
+    Default: "prod/query"
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -43,13 +39,13 @@ Resources:
             Method: post
       Environment:
         Variables:
-          TURSO_DB_URL: !Ref TursoDbUrl
-          TURSO_DB_AUTH_TOKEN: !Ref TursoDbAuthToken
+          TURSO_DB_URL: !Sub "{{resolve:secretsmanager:${secretName}:SecretString:url}}"
+          TURSO_DB_AUTH_TOKEN: !Sub "{{resolve:secretsmanager:${secretName}:SecretString:token}}"
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: !Ref StageName
+      StageName: !Ref stageName
       DefinitionBody:
         openapi: 3.0.1
         swagger: "2.0"
