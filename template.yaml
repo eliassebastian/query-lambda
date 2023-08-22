@@ -80,7 +80,7 @@ Resources:
 Outputs:
   HttpApiUrl:
     Description: URL of your API endpoint
-    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${stageName}/"
   HttpApiId:
     Description: Api id of HttpApi
     Value: !Ref HttpApi
