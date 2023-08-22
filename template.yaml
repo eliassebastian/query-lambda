@@ -62,7 +62,28 @@ Resources:
                 httpMethod: "POST"
                 uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
                 connectionType: "INTERNET"
-
+      Auth:
+        Authorizers:
+          OAuth2Authorizer:
+            JwtConfiguration:
+              issuer: "https://winning-snipe-81.clerk.accounts.dev"
+              audience:
+                - query
+            IdentitySource: "$request.header.Authorization"
+        DefaultAuthorizer: OAuth2Authorizer
+      CorsConfiguration:
+        AllowOrigins:
+          - "https://www.querydata.info"
+          - "https://querydata.info"
+        AllowHeaders:
+          - x-apigateway-header
+          - authorization
+          - content-type
+        AllowMethods:
+          - POST
+          - OPTIONS
+        MaxAge: 3600
+        AllowCredentials: true
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
     Properties:
